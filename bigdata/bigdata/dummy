@@ -1,0 +1,211 @@
+button {
+  padding: 12px 25px;  /* Increased padding for a larger button */
+  background: linear-gradient(45deg, #8e44ad, #9b59b6); /* Gradient background */
+  color: white;
+  font-size: 18px;
+  border: none;
+  border-radius: 30px;  /* Rounded corners */
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease-in-out; /* Smooth transition for effects */
+  margin-top: 20px;
+  width: 80%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow effect */
+  outline: none;
+}
+
+button:hover {
+  background: linear-gradient(45deg, #9b59b6, #8e44ad); /* Hover effect to swap gradient */
+  transform: translateY(-5px); /* Slightly raise the button */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+button:active {
+  transform: translateY(2px); /* Button appears to press down when clicked */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Reducing shadow on click */
+}
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Edu IQ - Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="portallogin.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+ 
+</head>
+<body>
+  <div class="menu">
+    <img src="img/eduiq.jpeg" alt="logo" class="logo">
+    <div class="menu-item">📋 Dashboard</div>
+    
+    <div class="menu-item"><a href="performance.html">📈 Performance</a></div>
+    <div class="menu-item"><a href="test.html">🧪 Upcoming Tests</a></div>
+    <div class="menu-item"><a href="schedule.html">📅 Schedule</a></div>
+    <div class="menu-item"><a href="gpaanalysis.html">📉 GPA Analytics</a></div>
+    <div class="menu-item">📝 Feedback & Review</div>
+    <div class="menu-item">
+      <button id="logoutBtn">Logout</button>
+    </div>
+  </div>
+
+  <main class="content">
+    <header>
+      <div class="main">
+        
+
+        <div class="welcome">
+          Welcome, <span id="Name">Student</span>!
+        </div>
+        <p>Always stay updated in your student portal</p>
+
+        <div class="quote" id="quote"></div>
+
+        <div class="datetime">
+          <span id="currentDate">Date:</span>
+          <span id="currentTime">Time:</span>
+        </div>
+
+        <!-- Your previous code remains unchanged above -->
+
+        <!-- Convert register-box to a form -->
+        <form class="register-box" action="" method="POST">
+          <h3>Enter Your Registration Number</h3>
+          <input type="text" id="reg_no" name="reg_no" placeholder="Enter Reg No" required />
+          <button type="submit">Submit</button>
+        </form>
+        
+
+      </div>
+    </header>
+  </main>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      // Update date and time
+      function updateDateTime() {
+        const now = new Date();
+        const date = now.toLocaleDateString();
+        const time = now.toLocaleTimeString();
+        const day = now.toLocaleDateString(undefined, { weekday: 'long' });
+        document.getElementById('currentDate').textContent = `Date: ${date} (${day})`;
+        document.getElementById('currentTime').textContent = `Time: ${time}`;
+      }
+      setInterval(updateDateTime, 1000);
+      updateDateTime();
+
+      // Display random quote
+      const quotes = [
+        { quote: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+        { quote: "Push yourself, because no one else is going to do it for you.", author: "Unknown" },
+        { quote: "Success doesn’t just find you. You have to go out and get it.", author: "Unknown" },
+        { quote: "Dream it. Wish it. Do it.", author: "Unknown" }
+      ];
+      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      document.getElementById('quote').innerHTML = `${randomQuote.quote}<div class="quote-author"> — ${randomQuote.author}</div>`;
+    });
+
+    function fetchStudentData() {
+      const regNo = document.getElementById("reg_no").value;
+      if (regNo) {
+        alert("Fetching data for Reg No: " + regNo);
+      } else {
+        alert("Please enter a valid Registration Number.");
+      }
+    }
+    function showMarks() {
+            // Clear any previous error or data
+            document.getElementById('errorMessage').textContent = '';
+            document.getElementById('marks').style.display = 'none';
+            let rollNumber = document.getElementById('reg_no').value;
+
+            // Define student marks (just 15 students for example)
+            
+            const studentsMarks = {
+  "2024115001": { name: "JANANI RAMANATHAN", english: 76, tamil: 98, maths: 88, physics: 83, chemistry: 98, c_programming: 98, it_essentials: 98 },
+  "2024115003": { name: "PRATHISHA RAJA SUDHA", english: 85, tamil: 98, maths: 85, physics: 72, chemistry: 85, c_programming: 98, it_essentials: 98 },
+  "2024115005": { name: "SHRIYA L", english: 55, tamil: 98, maths: 98, physics: 55, chemistry: 62, c_programming: 85, it_essentials: 98 },
+  "2024115007": { name: "SAMYUKTA KAMALAKANNAN", english: 85, tamil: 98, maths: 98, physics: 85, chemistry: 97, c_programming: 98, it_essentials: 98 },
+  "2024115009": { name: "DHARANESHE", english: 59, tamil: 91, maths: 91, physics: 56, chemistry: 88, c_programming: 56, it_essentials: 56 },
+  "2024115011": { name: "S SANDHYA", english: 69, tamil: 82, maths: 55, physics: 62, chemistry: 55, c_programming: 75, it_essentials: 75 },
+  "2024115013": { name: "V SANJANA", english: 92, tamil: 95, maths: 85, physics: 85, chemistry: 92, c_programming: 92, it_essentials: 95 },
+  "2024115015": { name: "ASHWIKA R", english: 92, tamil: 95, maths: 85, physics: 85, chemistry: 92, c_programming: 92, it_essentials: 95 },
+  "2024115017": { name: "C GOUTHAM SRIHARI", english: 95, tamil: 98, maths: 95, physics: 95, chemistry: 95, c_programming: 98, it_essentials: 98 },
+  "2024115019": { name: "DINESH S", english: 85, tamil: 95, maths: 85, physics: 85, chemistry: 88, c_programming: 98, it_essentials: 98 },
+  "2024115021": { name: "DHRUVAA V", english: 85, tamil: 95, maths: 85, physics: 85, chemistry: 95, c_programming: 98, it_essentials: 98 },
+  "2024115023": { name: "HARINI R", english: 85, tamil: 95, maths: 85, physics: 85, chemistry: 95, c_programming: 98, it_essentials: 98 },
+  "2024115025": { name: "HARSHINI P", english: 76, tamil: 95, maths: 85, physics: 85, chemistry: 85, c_programming: 98, it_essentials: 98 },
+  "2024115027": { name: "INDHUMATHI C", english: 88, tamil: 95, maths: 95, physics: 95, chemistry: 95, c_programming: 98, it_essentials: 98 },
+  "2024115029": { name: "JOSHNA S", english: 85, tamil: 95, maths: 85, physics: 85, chemistry: 88, c_programming: 98, it_essentials: 98 },
+  "2024115031": { name: "KAARTHIKEYAN", english: 65, tamil: 75, maths: 65, physics: 55, chemistry: 65, c_programming: 75, it_essentials: 75 },
+  "2024115033": { name: "KARTHIK R", english: 65, tamil: 75, maths: 65, physics: 55, chemistry: 65, c_programming: 75, it_essentials: 75 },
+  "2024115035": { name: "KRISHNADAS G", english: 88, tamil: 95, maths: 85, physics: 85, chemistry: 92, c_programming: 98, it_essentials: 98 },
+  "2024115037": { name: "KRITHIKHA P", english: 85, tamil: 95, maths: 85, physics: 85, chemistry: 95, c_programming: 98, it_essentials: 98 },
+  "2024115039": { name: "LAVANYA S", english: 85, tamil: 95, maths: 85, physics: 85, chemistry: 95, c_programming: 98, it_essentials: 98 },
+"2024115041": { name: "LOKESH S", english: 55, tamil: 75, maths: 65, physics: 55, chemistry: 55, c_programming: 75, it_essentials: 75 },
+  "2024115043": { name: "MADHANRAJ V", english: 65, tamil: 75, maths: 65, physics: 55, chemistry: 65, c_programming: 75, it_essentials: 75 },
+  "2024115045": { name: "MAHESH KUMAR", english: 75, tamil: 85, maths: 75, physics: 75, chemistry: 75, c_programming: 85, it_essentials: 85 },
+  "2024115047": { name: "MAHIMA G", english: 85, tamil: 95, maths: 85, physics: 85, chemistry: 95, c_programming: 98, it_essentials: 98 },
+  "2024115049": { name: "MALATHI R", english: 85, tamil: 95, maths: 85, physics: 85, chemistry: 95, c_programming: 98, it_essentials: 98 },
+  "2024115051": { name: "MEGALA B", english: 85, tamil: 95, maths: 85, physics: 85, chemistry: 95, c_programming: 98, it_essentials: 98 },
+  "2024115053": { name: "MOHANAPRIYA S", english: 85, tamil: 95, maths: 85, physics: 85, chemistry: 95, c_programming: 98, it_essentials: 98 },
+  "2024115055": { name: "MONISHA T", english: 85, tamil: 95, maths: 85, physics: 85, chemistry: 95, c_programming: 98, it_essentials: 98 },
+  "2024115057": { name: "MUKESH B", english: 65, tamil: 75, maths: 65, physics: 55, chemistry: 65, c_programming: 75, it_essentials: 75 },
+  "2024115059": { name: "NARMADHA A", english: 85, tamil: 95, maths: 85, physics: 85, chemistry: 95, c_programming: 98, it_essentials: 98 },
+  "2024115061": { name: "NAVIN E", english: 65, tamil: 75, maths: 65, physics: 55, chemistry: 65, c_programming: 75, it_essentials: 75 },
+  "2024115063": { name: "NIKITHA S", english: 85, tamil: 95, maths: 85, physics: 85, chemistry: 95, c_programming: 98, it_essentials: 98 },
+  "2024115065": { name: "NITHISH KUMAR", english: 65, tamil: 75, maths: 65, physics: 55, chemistry: 65, c_programming: 75, it_essentials: 75 },
+  "2024115067": { name: "PAVITHRA M", english: 85, tamil: 95, maths: 85, physics: 85, chemistry: 95, c_programming: 98, it_essentials: 98 },
+  "2024115069": { name: "PAVITHRAN R", english: 65, tamil: 75, maths: 65, physics: 55, chemistry: 65, c_programming: 75, it_essentials: 75 },
+  "2024115071": { name: "POOJA S", english: 85, tamil: 95, maths: 85, physics: 85, chemistry: 95, c_programming: 98, it_essentials: 98 },
+  "2024115073": { name: "PRANAV S", english: 65, tamil: 75, maths: 65, physics: 55, chemistry: 65, c_programming: 75, it_essentials: 75 },
+  "2024115075": { name: "PRANITHA S", english: 85, tamil: 95, maths: 85, physics: 85, chemistry: 95, c_programming: 98, it_essentials: 98 },
+  "2024115077": { name: "PRAVEEN R", english: 65, tamil: 75, maths: 65, physics: 55, chemistry: 65, c_programming: 75, it_essentials: 75 },
+  "2024115079": { name: "PRIYANKA R", english: 85, tamil: 95, maths: 85, physics: 85, chemistry: 95, c_programming: 98, it_essentials: 98 },
+  "2024115081": { name: "RAHUL S", english: 65, tamil: 75, maths: 65, physics: 55, chemistry: 65, c_programming: 75, it_essentials: 75 },
+  "2024115083": { name: "RAM KUMAR S", english: 65, tamil: 75, maths: 65, physics: 55, chemistry: 65, c_programming: 75, it_essentials: 75 },
+  "2024115085": { name: "RAVI K", english: 65, tamil: 75, maths: 65, physics: 55, chemistry: 65, c_programming: 75, it_essentials: 75 },
+  "2024115087": { name: "RESHMA R", english: 85, tamil: 95, maths: 85, physics: 85, chemistry: 95, c_programming: 98, it_essentials: 98 },
+  "2024115089": { name: "REVATHY S", english: 85, tamil: 95, maths: 85, physics: 85, chemistry: 95, c_programming: 98, it_essentials: 98 },
+  "2024115091": { name: "RIYA S", english: 85, tamil: 95, maths: 85, physics: 85, chemistry: 95, c_programming: 98, it_essentials: 98 },
+  "2024115093": { name: "ROHITH K", english: 65, tamil: 75, maths: 65, physics: 55, chemistry: 65, c_programming: 75, it_essentials: 75 },
+  // ... (continues until the last student!)
+};
+
+
+            // Check if the roll number exists
+            if (studentsMarks[rollNumber]) {
+                const student = studentsMarks[rollNumber];
+                document.getElementById('displayRollNumber').textContent = rollNumber;
+
+                // Show marks of the student
+                const marksList = document.getElementById('marksList');
+                marksList.innerHTML = `
+                    <li>Name: ${student.name}</li>
+                    <li>English: ${student.english}</li>
+                    <li>Tamil: ${student.tamil}</li>
+                    <li>Physics: ${student.physics}</li>
+                    <li>Chemistry: ${student.chemistry}</li>
+                    <li>C Programming: ${student.c_programming}</li>
+                    <li>IT Essentials: ${student.it_essentials}</li>
+                `;
+
+                // Display the marks section
+                document.getElementById('marks').style.display = 'block';
+            } else {
+                // Show error message if the roll number is not found
+                document.getElementById('errorMessage').textContent = "No student found with this roll number.";
+            }
+        }
+    
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EduIQ - Schedule</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: linear-gradient(135deg, #d3cce3, #e9e4f0);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 3rem;
+      color: #4b2ddb;
+      margin-bottom: 30px;
+    }
+    .card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Force 2 cards per row */
+  gap: 30px;
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+    .card {
+      background: linear-gradient(135deg, #7b61ff, #a391ff);
+      padding: 40px 30px;
+      border-radius: 20px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+      text-align: center;
+      color: white;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.2), transparent 60%);
+      animation: shine 3s linear infinite;
+      transform: rotate(25deg);
+    }
+    @keyframes shine {
+      0% {
+        transform: translate(-100%, -100%) rotate(25deg);
+      }
+      100% {
+        transform: translate(100%, 100%) rotate(25deg);
+      }
+    }
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 35px rgba(0,0,0,0.2);
+    }
+    .card h2 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+    .card i {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    .schedule-section {
+      display: none;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .tables-container {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 16px;
+      border: 1px solid #e0e0e0;
+      text-align: center;
+    }
+    th {
+      background-color: #7B61FF;
+      color: white;
+    }
+    caption {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    .back-button {
+      margin: 30px auto;
+      display: block;
+      background: #7B61FF;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Select Academic Year</h1>
+  <div class="card-grid" id="yearCards">
+    <div class="card" onclick="showSchedule(1)">
+      <i>🎓</i>
+      <h2>1st Year</h2>
+    </div>
+    <div class="card" onclick="showSchedule(2)">
+      <i>📘</i>
+      <h2>2nd Year</h2>
+    </div>
+    <div class="card" onclick="showSchedule(3)">
+      <i>💻</i>
+      <h2>3rd Year</h2>
+    </div>
+    <div class="card" onclick="showSchedule(4)">
+      <i>🚀</i>
+      <h2>4th Year</h2>
+    </div>
+  </div>
+
+  <div class="schedule-section" id="scheduleSection">
+    <h1 id="scheduleHeading">Year Schedule</h1>
+    <div class="tables-container" id="tablesContainer">
+      <!-- Timetables will be injected here -->
+    </div>
+    <button class="back-button" onclick="goBack()">← Back to Year Selection</button>
+  </div>
+
+  <script>
+    const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+
+    const scheduleData = {
+      1: {
+        semester1: {
+          Monday:   ["Math", "CS", "Phy", "Eng", "Lab", "Free", "Math", "CS"],
+          Tuesday:  ["Eng", "Math", "Phy", "Lab", "CS", "Free", "Eng", "CS"],
+          Wednesday:["Phy", "Eng", "CS", "Math", "Lab", "Free", "Phy", "CS"],
+          Thursday: ["CS", "Math", "Eng", "Phy", "Lab", "Free", "Math", "CS"],
+          Friday:   ["Lab", "Math", "CS", "Eng", "Phy", "Free", "Eng", "Math"]
+        },
+        semester2: {
+          Monday:   ["DS", "OOP", "DBMS", "Math", "Lab", "Free", "DS", "OOP"],
+          Tuesday:  ["DBMS", "DS", "Math", "OOP", "Lab", "Free", "DS", "Math"],
+          Wednesday:["Math", "OOP", "DBMS", "DS", "Lab", "Free", "OOP", "DS"],
+          Thursday: ["OOP", "Math", "DS", "DBMS", "Lab", "Free", "DBMS", "OOP"],
+          Friday:   ["Lab", "DBMS", "Math", "OOP", "DS", "Free", "Math", "DS"]
+        }
+      },
+      2: {
+        semester3: {
+          Monday:   ["AI", "ML", "Python", "DBMS", "Web", "Free", "AI", "ML"],
+          Tuesday:  ["Python", "DBMS", "Web", "AI", "Lab", "Free", "ML", "AI"],
+          Wednesday:["ML", "AI", "DBMS", "Python", "Web", "Free", "AI", "DBMS"],
+          Thursday: ["DBMS", "AI", "ML", "Web", "Python", "Free", "Lab", "ML"],
+          Friday:   ["Lab", "Python", "ML", "DBMS", "AI", "Free", "Web", "DBMS"]
+        },
+        semester4: {
+          Monday:   ["OS", "CN", "TOC", "Python", "Project", "Lab", "Free", "CN"],
+          Tuesday:  ["CN", "TOC", "OS", "Python", "Lab", "Free", "Project", "CN"],
+          Wednesday:["TOC", "OS", "CN", "Project", "Lab", "Free", "Python", "CN"],
+          Thursday: ["OS", "Python", "CN", "TOC", "Project", "Free", "Lab", "OS"],
+          Friday:   ["Lab", "Project", "TOC", "CN", "OS", "Free", "Python", "CN"]
+        }
+      },
+      3: {
+        semester5: {
+          Monday:   ["Cyber", "Ethics", "ML", "AI", "Web", "Project", "ML", "Free"],
+          Tuesday:  ["AI", "Cyber", "Ethics", "ML", "Lab", "Free", "Project", "Web"],
+          Wednesday:["Web", "Project", "Cyber", "Ethics", "ML", "Free", "AI", "Cyber"],
+          Thursday: ["Ethics", "Web", "ML", "AI", "Cyber", "Free", "Lab", "Project"],
+          Friday:   ["Lab", "ML", "Web", "AI", "Project", "Free", "Cyber", "Ethics"]
+        },
+        semester6: {
+          Monday:   ["Cloud", "IoT", "HCI", "AI", "Lab", "Free", "IoT", "HCI"],
+          Tuesday:  ["HCI", "Cloud", "IoT", "AI", "Project", "Free", "Lab", "HCI"],
+          Wednesday:["IoT", "AI", "Cloud", "HCI", "Lab", "Free", "Project", "AI"],
+          Thursday: ["AI", "Cloud", "HCI", "IoT", "Lab", "Free", "Cloud", "IoT"],
+          Friday:   ["Lab", "IoT", "AI", "Cloud", "HCI", "Free", "Project", "AI"]
+        }
+      },
+      4: {
+        semester7: {
+          Monday:   ["Capstone", "Cloud", "Security", "Free", "Cloud", "Project", "Capstone", "Lab"],
+          Tuesday:  ["Cloud", "Capstone", "Security", "Lab", "Free", "Project", "Cloud", "Capstone"],
+          Wednesday:["Security", "Capstone", "Project", "Cloud", "Lab", "Free", "Security", "Capstone"],
+          Thursday: ["Capstone", "Security", "Cloud", "Project", "Lab", "Free", "Cloud", "Security"],
+          Friday:   ["Lab", "Project", "Cloud", "Capstone", "Security", "Free", "Capstone", "Cloud"]
+        },
+        semester8: {
+          Monday:   ["Internship", "Project", "Review", "Free", "Internship", "Capstone", "Review", "Free"],
+          Tuesday:  ["Project", "Internship", "Review", "Capstone", "Free", "Review", "Internship", "Lab"],
+          Wednesday:["Review", "Capstone", "Internship", "Lab", "Free", "Project", "Review", "Internship"],
+          Thursday: ["Capstone", "Review", "Project", "Internship", "Lab", "Free", "Internship", "Review"],
+          Friday:   ["Lab", "Internship", "Review", "Project", "Capstone", "Free", "Review", "Internship"]
+        }
+      }
+    };
+
+    function showSchedule(year) {
+      document.getElementById("yearCards").style.display = "none";
+      document.getElementById("scheduleSection").style.display = "block";
+      document.getElementById("scheduleHeading").textContent = `${year} Year Schedule`;
+
+      const semesters = scheduleData[year];
+      const tables = Object.keys(semesters).map((semKey, idx) => {
+        const timetable = semesters[semKey];
+        const rows = weekdays.map(day => `
+          <tr>
+            <td>${day}</td>
+            ${timetable[day].map(sub => `<td>${sub}</td>`).join('')}
+          </tr>
+        `).join('');
+
+        return `
+          <table>
+            <caption>Semester ${idx + 1}</caption>
+            <thead>
+              <tr>
+                <th>Day</th>
+                ${timetable[weekdays[0]].map((_, i) => `<th>Period ${i + 1}</th>`).join('')}
+              </tr>
+            </thead>
+            <tbody>
+              ${rows}
+            </tbody>
+          </table>
+        `;
+      }).join('');
+
+      document.getElementById("tablesContainer").innerHTML = tables;
+    }
+
+    function goBack() {
+      document.getElementById("yearCards").style.display = "grid";
+      document.getElementById("scheduleSection").style.display = "none";
+    }
+  </script>
+
+</body>
+</html>

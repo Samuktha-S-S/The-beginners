@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Marks</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin-top: 50px;
+            text-align: center;
+        }
+        #marks {
+            display: none;
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Enter your Roll Number</h2>
+        <input type="text" id="rollNumber" placeholder="Enter Roll Number (e.g., 101)">
+        <button onclick="showMarks()">Submit</button>
+
+        <div id="marks">
+            <h3>Marks for Roll Number <span id="displayRollNumber"></span></h3>
+            <ul id="marksList"></ul>
+        </div>
+
+        <p class="error" id="errorMessage"></p>
+    </div>
+
+    <script>
+        function showMarks() {
+            // Clear any previous error or data
+            document.getElementById('errorMessage').textContent = '';
+            document.getElementById('marks').style.display = 'none';
+            let rollNumber = document.getElementById('rollNumber').value;
+
+            // Define student marks (just 15 students for example)
+            const studentsMarks = {
+                "101": { name: "John Doe", english: 85, tamil: 75, physics: 90, chemistry: 88, c_programming: 92, it_essentials: 80 },
+                "102": { name: "Jane Smith", english: 78, tamil: 72, physics: 85, chemistry: 89, c_programming: 87, it_essentials: 76 },
+                "103": { name: "Bob Lee", english: 95, tamil: 88, physics: 78, chemistry: 80, c_programming: 91, it_essentials: 84 },
+                // Add more student data here...
+                "115": { name: "Alice Green", english: 65, tamil: 70, physics: 60, chemistry: 72, c_programming: 80, it_essentials: 65 },
+            };
+
+            // Check if the roll number exists
+            if (studentsMarks[rollNumber]) {
+                const student = studentsMarks[rollNumber];
+                document.getElementById('displayRollNumber').textContent = rollNumber;
+
+                // Show marks of the student
+                const marksList = document.getElementById('marksList');
+                marksList.innerHTML = `
+                    <li>Name: ${student.name}</li>
+                    <li>English: ${student.english}</li>
+                    <li>Tamil: ${student.tamil}</li>
+                    <li>Physics: ${student.physics}</li>
+                    <li>Chemistry: ${student.chemistry}</li>
+                    <li>C Programming: ${student.c_programming}</li>
+                    <li>IT Essentials: ${student.it_essentials}</li>
+                `;
+
+                // Display the marks section
+                document.getElementById('marks').style.display = 'block';
+            } else {
+                // Show error message if the roll number is not found
+                document.getElementById('errorMessage').textContent = "No student found with this roll number.";
+            }
+        }
+    </script>
+
+</body>
+</html>

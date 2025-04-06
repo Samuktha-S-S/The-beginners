@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Performance</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f6fa;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #003366;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border-bottom: 1px solid #ccc;
+    }
+    th {
+      background-color: #003366;
+      color: white;
+    }
+    .highlight {
+      margin-top: 20px;
+      background: #e3f2fd;
+      padding: 10px 20px;
+      border-left: 5px solid #007acc;
+      border-radius: 8px;
+    }
+    canvas {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Academic Performance</h1>
+
+    <table id="performanceTable">
+      <thead>
+        <tr>
+          <th>Subject</th>
+          <th>Internal</th>
+          <th>External</th>
+          <th>Total (out of 100)</th>
+          <th>Grade</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div class="highlight" id="summary"></div>
+
+    <canvas id="performanceChart" width="400" height="200"></canvas>
+  </div>
+
+  <script>
+    const performance = [
+      { subject: "Mathematics", internal: 45, external: 85, grade: "A+" },
+      { subject: "Physics", internal: 40, external: 75, grade: "A" },
+      { subject: "Chemistry", internal: 42, external: 78, grade: "A+" },
+      { subject: "Computer Science", internal: 48, external: 88, grade: "O" }
+    ];
+
+    const tbody = document.querySelector("#performanceTable tbody");
+    let totalMarks100 = 0;
+    let maxTotal = 0;
+    let topSubject = "";
+
+    performance.forEach(p => {
+      const totalRaw = p.internal + p.external; // out of 150
+      const total = ((totalRaw / 150) * 100).toFixed(2); // Normalize to 100
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${p.subject}</td>
+        <td>${p.internal}</td>
+        <td>${p.external}</td>
+        <td>${total}</td>
+        <td>${p.grade}</td>
+      `;
+      tbody.appendChild(row);
+
+      totalMarks100 += parseFloat(total);
+      if (parseFloat(total) > maxTotal) {
+        maxTotal = total;
+        topSubject = p.subject;
+      }
+    });
+
+    const gpa = (totalMarks100 / performance.length).toFixed(2); // out of 100
+    document.getElementById("summary").innerHTML = `
+      <strong>Highlights:</strong><br>
+      🔹 Top Scoring Subject: <strong>${topSubject}</strong><br>
+      🔹 Total Normalized Marks: <strong>${totalMarks100.toFixed(2)} / ${performance.length * 100}</strong><br>
+      🔹 Calculated GPA (out of 100): <strong>${gpa}</strong>
+    `;
+
+    const ctx = document.getElementById('performanceChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: performance.map(p => p.subject),
+        datasets: [{
+          label: 'Total Marks (out of 100)',
+          data: performance.map(p => ((p.internal + p.external) / 150 * 100).toFixed(2)),
+          backgroundColor: '#007acc',
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: true }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

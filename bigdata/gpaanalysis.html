@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Edu IQ - Mark Analysis</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #e6f0fa;
+      color: #333;
+    }
+    header {
+      background: #1f3a60;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: 20px;
+      padding: 30px;
+    }
+    .card {
+      background: #f9f9f9;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .center-card {
+      text-align: center;
+    }
+    input[type="number"] {
+      padding: 10px;
+      font-size: 16px;
+      width: 60%;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #1f3a60;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    canvas {
+      max-width: 300px;
+      margin: auto;
+    }
+    .message {
+      margin-top: 15px;
+      font-weight: bold;
+      color: #1f3a60;
+    }
+
+    /* Modal styling */
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      width: 300px;
+    }
+
+    .modal-content h2 {
+      margin-bottom: 20px;
+    }
+
+    .modal-content input {
+      display: block;
+      margin: 10px auto;
+      padding: 10px;
+      width: 90%;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .modal-content button {
+      margin-top: 20px;
+      width: 100%;
+      background-color: #1f3a60;
+    }
+  </style>
+</head>
+<body>
+  <!-- Student Info Modal -->
+  <div class="modal" id="studentModal">
+    <div class="modal-content">
+      <h2>Enter Student Details</h2>
+      <input type="text" id="nameInput" placeholder="Student Name" required />
+      <input type="text" id="rollInput" placeholder="Roll Number" required />
+      <input type="text" id="deptInput" placeholder="Department" required />
+      <button onclick="submitStudent()">Submit</button>
+    </div>
+  </div>
+
+  <header>
+    <h1>📊 Edu IQ - Mark Analysis</h1>
+  </header>
+
+  <div class="container">
+    <!-- Left Panel -->
+    <div class="card">
+      <h3>Student Info</h3>
+      <p><strong>Name:</strong> <span id="studentName">-</span></p>
+      <p><strong>Roll No:</strong> <span id="studentRoll">-</span></p>
+      <p><strong>Dept:</strong> <span id="studentDept">-</span></p>
+    </div>
+
+    <!-- Center Panel -->
+    <div class="card center-card">
+      <h2>Enter Your CGPA to Analyze Performance</h2>
+      <input type="number" id="cgpaInput" min="0" max="10" step="0.01" placeholder="e.g., 8.4" />
+      <br>
+      <button onclick="generateChart()">Generate Insights</button>
+      <canvas id="cgpaChart"></canvas>
+      <div class="message" id="cgpaMessage"></div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="card">
+      <h3>Insights & Suggestions</h3>
+      <p>📌 Set realistic GPA goals and work consistently.</p>
+      <p>📌 Subject-wise analysis will be available soon!</p>
+      <p>📌 Track your academic growth each semester.</p>
+      <p>📌 Let your performance tell your story!</p>
+    </div>
+  </div>
+
+  <script>
+    let chart;
+
+    function generateChart() {
+      const input = parseFloat(document.getElementById("cgpaInput").value);
+      const ctx = document.getElementById("cgpaChart").getContext("2d");
+      let message = "";
+      let chartData = [0, 0, 0, 0, 0];
+
+      if (isNaN(input)) {
+        document.getElementById("cgpaMessage").textContent = "❗ Please enter a valid CGPA.";
+        return;
+      }
+
+      if (input >= 9) {
+        chartData[0] = 100;
+        message = "🌟 Outstanding! You're in the top tier. Keep up the dedication and continue setting new academic benchmarks!";
+      } else if (input >= 8) {
+        chartData[1] = 100;
+        message = "🎯 Great job! You're doing very well. A little extra focus can push you even higher.";
+      } else if (input >= 7) {
+        chartData[2] = 100;
+        message = "💡 Good work. You're on the right track. Consistency and smart learning will boost your grades.";
+      } else if (input >= 6) {
+        chartData[3] = 100;
+        message = "⚠️ You're doing okay, but improvement is needed. Seek guidance and stay disciplined.";
+      } else {
+        chartData[4] = 100;
+        message = "🚨 Your CGPA is currently below average. Don’t give up! Speak with your mentors and develop a study plan.";
+      }
+
+      if (chart) chart.destroy();
+
+      chart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: [
+            "9–10 (Excellent)",
+            "8–9 (Very Good)",
+            "7–8 (Good)",
+            "6–7 (Average)",
+            "<6 (Needs Help)"
+          ],
+          datasets: [{
+            data: chartData,
+            backgroundColor: [
+              "#38b000", // Green
+              "#70e000", // Lime
+              "#ffd500", // Yellow
+              "#ff9100", // Orange
+              "#ff4d6d"  // Red
+            ],
+            borderWidth: 1,
+          }],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'bottom'
+            }
+          }
+        },
+      });
+
+      document.getElementById("cgpaMessage").textContent = message;
+    }
+
+    function submitStudent() {
+      const name = document.getElementById("nameInput").value.trim();
+      const roll = document.getElementById("rollInput").value.trim();
+      const dept = document.getElementById("deptInput").value.trim();
+
+      if (!name || !roll || !dept) {
+        alert("Please fill all fields.");
+        return;
+      }
+
+      document.getElementById("studentName").textContent = name;
+      document.getElementById("studentRoll").textContent = roll;
+      document.getElementById("studentDept").textContent = dept;
+
+      document.getElementById("studentModal").style.display = "none";
+    }
+
+    window.onload = () => {
+      document.getElementById("studentModal").style.display = "flex";
+    };
+  </script>
+</body>
+</html>
